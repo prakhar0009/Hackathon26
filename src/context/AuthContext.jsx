@@ -39,14 +39,29 @@ export const AuthProvider = ({ children }) => {
 
   // Ensure login also sets the full user object including the name
   const login = (email, password, requestedRole) => {
+    // 1. Get all registered users from local storage
     const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    // 2. Find the user that matches BOTH email and password
     const foundUser = users.find(
-      (u) => u.email === email && u.password === password,
+      (u) =>
+        u.email.toLowerCase() === email.toLowerCase() &&
+        u.password === password,
     );
 
-    if (!foundUser) throw new Error("Invalid credentials");
-    if (foundUser.role !== requestedRole) throw new Error("Role mismatch");
+    if (!foundUser) {
+      throw new Error("Invalid email or password");
+    }
 
+    // 3. STRICT ROLE CHECK: This is likely where it was breaking
+    // We ensure the role they selected on the toggle matches their registered role
+    if (foundUser.role !== requestedRole) {
+      throw new Error(
+        `This account is registered as a ${foundUser.role}, not a ${requestedRole}`,
+      );
+    }
+
+    // 4. Success: Save the session
     localStorage.setItem("currentUser", JSON.stringify(foundUser));
     setUser(foundUser);
   };

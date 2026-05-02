@@ -15,21 +15,26 @@ const Home = () => {
         </div>
 
         <div className="flex items-center gap-6 text-[#666666]">
-          <span className="cursor-pointer">How It Works</span>
-          <span className="cursor-pointer">Features</span>
+          <span className="cursor-pointer hover:text-[#A35831] transition-colors">
+            How It Works
+          </span>
+          <span className="cursor-pointer hover:text-[#A35831] transition-colors">
+            Features
+          </span>
         </div>
 
         <div className="flex items-center gap-4">
+          {/* Fixed: was "/login/buyer" which doesn't exist */}
           <button
-            onClick={() => navigate("/login/buyer")}
-            className="text-[#222222]"
+            onClick={() => navigate("/login")}
+            className="text-[#222222] font-medium hover:text-[#A35831] transition-colors"
           >
             Log In
           </button>
 
           <button
             onClick={() => navigate("/register")}
-            className="bg-[#A35831] hover:bg-[#8B4A29] text-white px-5 py-2 rounded-lg"
+            className="bg-[#A35831] hover:bg-[#8B4A29] text-white px-5 py-2 rounded-lg font-medium transition-colors"
           >
             Get Started
           </button>
@@ -38,7 +43,7 @@ const Home = () => {
 
       {/* HERO */}
       <div className="flex flex-col items-center justify-center text-center px-4 py-20">
-        <p className="text-sm text-[#A35831] bg-[#f1e6df] px-4 py-1 rounded-full mb-6">
+        <p className="text-sm text-[#A35831] bg-[#f1e6df] px-4 py-1 rounded-full mb-6 font-medium">
           AI-POWERED NEGOTIATIONS
         </p>
 
@@ -49,7 +54,7 @@ const Home = () => {
           </span>
         </h1>
 
-        <p className="text-[#666666] mt-6 max-w-xl">
+        <p className="text-[#666666] mt-6 max-w-xl text-lg">
           Create autonomous negotiation agents that handle the back-and-forth
           with sellers — so you can focus on decisions, not conversations.
         </p>
@@ -57,14 +62,44 @@ const Home = () => {
         <div className="flex gap-4 mt-8">
           <button
             onClick={() => navigate("/register")}
-            className="bg-[#A35831] hover:bg-[#8B4A29] text-white px-6 py-3 rounded-lg"
+            className="bg-[#A35831] hover:bg-[#8B4A29] text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
             Start Negotiating →
           </button>
 
-          <button className="border border-gray-300 px-6 py-3 rounded-lg">
+          <button className="border border-gray-300 px-6 py-3 rounded-lg hover:bg-white transition-colors">
             See How It Works
           </button>
+        </div>
+
+        {/* Feature Cards */}
+        <div className="grid grid-cols-3 gap-6 mt-20 max-w-4xl w-full">
+          {[
+            {
+              icon: "🤖",
+              title: "AI Agents",
+              desc: "Deploy intelligent agents that negotiate on your behalf 24/7",
+            },
+            {
+              icon: "⚡",
+              title: "Real-time",
+              desc: "Live negotiation updates and instant counter-offer processing",
+            },
+            {
+              icon: "📊",
+              title: "Analytics",
+              desc: "Track savings, win rates, and negotiation performance",
+            },
+          ].map((f) => (
+            <div
+              key={f.title}
+              className="bg-[#FFFDF8] border border-[rgba(0,0,0,0.06)] rounded-2xl p-6 text-left shadow-sm"
+            >
+              <div className="text-3xl mb-3">{f.icon}</div>
+              <h3 className="font-bold text-[#2D2621] mb-1">{f.title}</h3>
+              <p className="text-sm text-[#666666]">{f.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext"; // Import our custom hook
+import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const { register } = useAuth(); // Access the register function
+  const { register } = useAuth();
 
   const [form, setForm] = useState({
     name: "",
@@ -17,10 +17,8 @@ const RegisterForm = () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleSubmit = (e) => {
-    // 1. Ensure preventDefault is called correctly
-    if (e) e.preventDefault();
+    e.preventDefault();
 
-    // 2. Simple Validation
     if (!form.name || !form.email || !form.password) {
       toast.error("Please fill in all fields");
       return;
@@ -31,14 +29,15 @@ const RegisterForm = () => {
       return;
     }
 
+    if (form.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
     try {
-      // 3. Pass the data from the 'form' state to our register function[cite: 1]
       // register(email, password, role, fullName)
       register(form.email, form.password, form.role, form.name);
-
-      toast.success("Account created successfully!");
-
-      // 4. Redirect to the correct protected dashboard route[cite: 1]
+      toast.success("Account created! Welcome to NegotiateAI 🎉");
       navigate(
         form.role === "buyer" ? "/dashboard/buyer" : "/dashboard/seller",
       );
@@ -51,8 +50,15 @@ const RegisterForm = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#F4F0E6] px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg bg-[#FFFDF8] border border-[rgba(0,0,0,0.06)] shadow-[0_16px_50px_rgba(0,0,0,0.03)] rounded-2xl p-8"
+        className="w-full max-w-lg bg-[#FFFDF8] border border-[rgba(0,0,0,0.06)] shadow-[0_16px_50px_rgba(0,0,0,0.08)] rounded-2xl p-8"
       >
+        <div className="flex items-center gap-2 justify-center mb-6">
+          <div className="bg-[#A35831] text-white w-8 h-8 flex items-center justify-center rounded-md font-bold">
+            N
+          </div>
+          <span className="text-lg font-semibold">NegotiateAI</span>
+        </div>
+
         <h1 className="text-3xl font-bold text-[#222222] text-center mb-2">
           Create an account
         </h1>
@@ -62,7 +68,9 @@ const RegisterForm = () => {
 
         {/* Full Name */}
         <div className="mb-4">
-          <label className="text-sm text-[#666666]">Full Name</label>
+          <label className="text-sm text-[#666666] font-medium">
+            Full Name
+          </label>
           <input
             type="text"
             placeholder="Your full name"
@@ -75,7 +83,9 @@ const RegisterForm = () => {
 
         {/* Email */}
         <div className="mb-4">
-          <label className="text-sm text-[#666666]">Email Address</label>
+          <label className="text-sm text-[#666666] font-medium">
+            Email Address
+          </label>
           <input
             type="email"
             placeholder="you@company.com"
@@ -88,10 +98,10 @@ const RegisterForm = () => {
 
         {/* Password */}
         <div className="mb-4">
-          <label className="text-sm text-[#666666]">Password</label>
+          <label className="text-sm text-[#666666] font-medium">Password</label>
           <input
             type="password"
-            placeholder="Create a strong password"
+            placeholder="Min. 6 characters"
             className="w-full mt-1 px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#A35831]"
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -101,12 +111,14 @@ const RegisterForm = () => {
 
         {/* Role Toggle */}
         <div className="mb-6">
-          <label className="text-sm text-[#666666] block mb-2">I am a</label>
+          <label className="text-sm text-[#666666] font-medium block mb-2">
+            I am a
+          </label>
           <div className="flex bg-gray-100 rounded-lg p-1">
             <button
               type="button"
               onClick={() => setForm({ ...form, role: "buyer" })}
-              className={`flex-1 py-2 rounded-md transition-all ${
+              className={`flex-1 py-2 rounded-md transition-all font-medium ${
                 form.role === "buyer"
                   ? "bg-white shadow text-[#A35831] font-bold"
                   : "text-gray-500"
@@ -117,7 +129,7 @@ const RegisterForm = () => {
             <button
               type="button"
               onClick={() => setForm({ ...form, role: "seller" })}
-              className={`flex-1 py-2 rounded-md transition-all ${
+              className={`flex-1 py-2 rounded-md transition-all font-medium ${
                 form.role === "seller"
                   ? "bg-white shadow text-[#A35831] font-bold"
                   : "text-gray-500"
@@ -134,6 +146,13 @@ const RegisterForm = () => {
         >
           Create Account →
         </button>
+
+        <p className="text-center text-sm text-gray-500 mt-4">
+          Already have an account?{" "}
+          <a href="/login" className="text-[#A35831] font-bold hover:underline">
+            Sign in
+          </a>
+        </p>
       </form>
     </div>
   );
