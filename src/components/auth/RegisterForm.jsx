@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../api/auth.api";
+import toast from "react-hot-toast";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -9,13 +13,39 @@ const RegisterForm = () => {
     role: "buyer",
   });
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const handleSubmit = async () => {
-    await registerUser(form);
+    if (!form.name || !form.email || !form.password) {
+      return toast.error("All fields are required");
+    }
+
+    if (!emailRegex.test(form.email)) {
+      return toast.error("Invalid email");
+    }
+
+    try {
+      await registerUser(form);
+
+      toast.success("Account created 🎉");
+
+      // ✅ ONLY redirect — no login()
+      navigate("/login"); // 👈 common login page
+    } catch (err) {
+      toast.error(err.message || "Registration failed");
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F4F0E6]">
-      <div className="w-full max-w-md bg-[#FFFDF8] border border-[rgba(0,0,0,0.06)] shadow-[0_16px_50px_rgba(0,0,0,0.03)] rounded-2xl p-8">
+    <div className="min-h-screen flex items-center justify-center bg-[#F4F0E6] px-4">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+        className="w-full max-w-lg bg-[#FFFDF8] border border-[rgba(0,0,0,0.06)] shadow-[0_16px_50px_rgba(0,0,0,0.03)] rounded-2xl p-8"
+      >
+        {/* Heading */}
         <h1 className="text-3xl font-bold text-[#222222] text-center mb-2">
           Create an account
         </h1>
@@ -63,6 +93,7 @@ const RegisterForm = () => {
 
           <div className="flex bg-gray-100 rounded-lg p-1">
             <button
+              type="button"
               onClick={() => setForm({ ...form, role: "buyer" })}
               className={`flex-1 py-2 rounded-md ${
                 form.role === "buyer"
@@ -74,6 +105,7 @@ const RegisterForm = () => {
             </button>
 
             <button
+              type="button"
               onClick={() => setForm({ ...form, role: "seller" })}
               className={`flex-1 py-2 rounded-md ${
                 form.role === "seller"
@@ -88,12 +120,12 @@ const RegisterForm = () => {
 
         {/* Submit */}
         <button
-          onClick={handleSubmit}
-          className="w-full bg-[#A35831] hover:bg-[#8B4A29] text-white py-3 rounded-lg transition"
+          type="submit"
+          className="w-full bg-[#A35831] hover:bg-[#8B4A29] text-white py-3 rounded-lg transition text-lg"
         >
           Create Account →
         </button>
-      </div>
+      </form>
     </div>
   );
 };
