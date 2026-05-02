@@ -7,8 +7,9 @@
   }
 }
 
-/* Custom shadow for that premium feel */
+/* Use standard CSS for complex shadows to avoid Vite/Tailwind build errors */
 .premium-card {
-  shadow-[0_8px_30px_rgb(0,0,0,0.04)];
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  @apply rounded-[2rem];
 }

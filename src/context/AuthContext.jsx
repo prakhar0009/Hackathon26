@@ -19,46 +19,34 @@ export const AuthProvider = ({ children }) => {
    * Register a new user and save to the 'users' array in localStorage
    * Also performs an auto-login after registration
    */
-  const register = (email, password, role) => {
+  // ... inside your AuthProvider ...
+
+  const register = (email, password, role, fullName) => {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
 
-    // Check if user already exists
     if (users.find((u) => u.email === email)) {
       throw new Error("User already exists!");
     }
 
-    const newUser = { email, password, role };
+    // We add fullName to the object being saved
+    const newUser = { email, password, role, fullName };
     users.push(newUser);
 
-    // Save updated users list and set the current session
     localStorage.setItem("users", JSON.stringify(users));
     localStorage.setItem("currentUser", JSON.stringify(newUser));
     setUser(newUser);
   };
 
-  /**
-   * Login logic that enforces role-based access
-   */
+  // Ensure login also sets the full user object including the name
   const login = (email, password, requestedRole) => {
     const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    // Find the user by email and password
     const foundUser = users.find(
       (u) => u.email === email && u.password === password,
     );
 
-    if (!foundUser) {
-      throw new Error("Invalid email or password.");
-    }
+    if (!foundUser) throw new Error("Invalid credentials");
+    if (foundUser.role !== requestedRole) throw new Error("Role mismatch");
 
-    // STRICT ROLE CHECK: Prevent Buyer from logging in as Seller and vice-versa
-    if (foundUser.role !== requestedRole) {
-      throw new Error(
-        `Access Denied: This account is registered as a ${foundUser.role}.`,
-      );
-    }
-
-    // Set the session
     localStorage.setItem("currentUser", JSON.stringify(foundUser));
     setUser(foundUser);
   };
