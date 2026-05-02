@@ -5,9 +5,9 @@ import {
   User,
   MessageSquare,
   LogOut,
-} from "lucide-react"; // Professional icons[cite: 1]
+} from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({ activeTab, setActiveTab }) => {
   const { user, logout } = useAuth();
 
   const getInitials = (name) => {
@@ -20,10 +20,10 @@ const Sidebar = () => {
   };
 
   const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard size={20} />, active: true },
-    { name: "Agents", icon: <Bot size={20} />, count: 3 },
-    { name: "Sellers", icon: <User size={20} /> },
-    { name: "Chat", icon: <MessageSquare size={20} />, count: 1 },
+    { id: "Dashboard", name: "Dashboard", icon: <LayoutDashboard size={18} /> },
+    { id: "Agents", name: "Agents", icon: <Bot size={18} />, count: 3 },
+    { id: "Sellers", name: "Sellers", icon: <User size={18} /> },
+    { id: "Chat", name: "Chat", icon: <MessageSquare size={18} />, count: 1 },
   ];
 
   return (
@@ -38,23 +38,32 @@ const Sidebar = () => {
           </span>
         </div>
 
-        <nav className="space-y-6">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
+        <nav className="space-y-2">
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-4">
             Main
           </p>
           {menuItems.map((item) => (
             <div
-              key={item.name}
-              className="flex justify-between items-center cursor-pointer group"
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`flex justify-between items-center cursor-pointer p-3 rounded-xl transition-all ${
+                activeTab === item.id
+                  ? "bg-[#F4F0E6] text-[#A35831]"
+                  : "text-gray-500 hover:bg-gray-50"
+              }`}
             >
-              <div
-                className={`flex items-center gap-4 ${item.active ? "text-[#A35831]" : "text-gray-500 group-hover:text-[#A35831]"}`}
-              >
+              <div className="flex items-center gap-4">
                 <span>{item.icon}</span>
                 <span className="font-bold text-sm">{item.name}</span>
               </div>
               {item.count && (
-                <span className="bg-[#A35831] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                <span
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                    activeTab === item.id
+                      ? "bg-[#A35831] text-white"
+                      : "bg-gray-100 text-gray-400"
+                  }`}
+                >
                   {item.count}
                 </span>
               )}
@@ -66,19 +75,19 @@ const Sidebar = () => {
       <div className="space-y-8">
         <button
           onClick={logout}
-          className="flex items-center gap-4 text-gray-400 hover:text-red-500 font-bold text-sm transition-colors"
+          className="flex items-center gap-4 text-gray-400 hover:text-red-500 font-bold text-sm"
         >
-          <LogOut size={20} />
+          <LogOut size={18} />
           <span>Log Out</span>
         </button>
 
         <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
-          <div className="w-12 h-12 bg-[#A35831] rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-[#A35831]/20">
-            {getInitials(user?.fullName)}
+          <div className="w-12 h-12 bg-[#A35831] rounded-full flex items-center justify-center text-white font-bold text-sm">
+            {getInitials(user?.fullName || "Avi Sahu")}
           </div>
           <div className="overflow-hidden">
             <p className="text-sm font-bold text-[#2D2621] truncate">
-              {user?.fullName || "Active User"}
+              {user?.fullName || "Avi Sahu"}
             </p>
             <p className="text-[11px] text-gray-400 font-medium capitalize">
               {user?.role} • Acme Corp
