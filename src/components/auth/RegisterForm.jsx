@@ -29,11 +29,29 @@ const RegisterForm = () => {
 
       toast.success("Account created 🎉");
 
-      // ✅ ONLY redirect — no login()
+      // ONLY redirect — no login()
       navigate("/login"); // 👈 common login page
     } catch (err) {
       toast.error(err.message || "Registration failed");
     }
+  };
+
+  // Inside RegisterForm.jsx
+  const handleRegister = (userData) => {
+    // 1. Get existing users or start an empty array
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    // 2. Add new user (e.g., { email, password, role: 'buyer' })
+    users.push(userData);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    // 3. Auto-login: Save the current session
+    localStorage.setItem("currentUser", JSON.stringify(userData));
+
+    // 4. Redirect to appropriate dashboard
+    navigate(
+      userData.role === "buyer" ? "/buyer-dashboard" : "/seller-dashboard",
+    );
   };
 
   return (

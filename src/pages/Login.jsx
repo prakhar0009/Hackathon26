@@ -13,14 +13,14 @@ const Login = () => {
             onClick={() => navigate("/login/buyer")}
             className="bg-[#A35831] text-white py-3 rounded"
           >
-            Login as Buyer
+            Buyer
           </button>
 
           <button
             onClick={() => navigate("/login/seller")}
             className="border py-3 rounded"
           >
-            Login as Seller
+            Seller
           </button>
         </div>
       </div>

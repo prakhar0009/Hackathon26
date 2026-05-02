@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+@layer base {
+  body {
+    @apply antialiased text-[#2D2621] bg-[#F4F0E6];
+    font-feature-settings: "cv02", "cv03", "cv04", "ss01";
+  }
+}
+
+/* Custom shadow for that premium feel */
+.premium-card {
+  shadow-[0_8px_30px_rgb(0,0,0,0.04)];
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

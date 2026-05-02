@@ -1,52 +1,32 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-// Pages
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
-import Login from "./pages/Login";
-import BuyerLogin from "./pages/BuyerDashboard";
-import SellerLogin from "./pages/SellerDashboard";
+import BuyerLogin from "./pages/BuyerLogin";
 import BuyerDashboard from "./pages/BuyerDashboard";
-import SellerDashboard from "./pages/SellerDashboard";
-
-// Protected Route
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Landing Page */}
         <Route path="/" element={<Home />} />
-
-        {/* Register */}
         <Route path="/register" element={<Register />} />
 
-        {/* Login Selection Page */}
-        <Route path="/login" element={<Login />} />
-
-        {/* Role-Based Login */}
+        {/* Buyer specific login */}
         <Route path="/login/buyer" element={<BuyerLogin />} />
-        <Route path="/login/seller" element={<SellerLogin />} />
 
-        {/* Protected Dashboards */}
+        {/* This is where we open the Buyer Dashboard after login */}
         <Route
           path="/dashboard/buyer"
           element={
-            <ProtectedRoute role="buyer">
+            <ProtectedRoute allowedRole="buyer">
               <BuyerDashboard />
             </ProtectedRoute>
           }
         />
 
-        <Route
-          path="/dashboard/seller"
-          element={
-            <ProtectedRoute role="seller">
-              <SellerDashboard />
-            </ProtectedRoute>
-          }
-        />
+        {/* Redirect unknown routes */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );

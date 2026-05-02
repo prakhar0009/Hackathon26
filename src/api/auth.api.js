@@ -10,7 +10,7 @@ const saveUsers = (users) => {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 };
 
-// ✅ REGISTER USER
+//  REGISTER USER
 export const registerUser = async (data) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -38,7 +38,7 @@ export const registerUser = async (data) => {
   });
 };
 
-// ✅ LOGIN BUYER
+//  LOGIN BUYER
 export const loginBuyer = async (data) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -63,7 +63,7 @@ export const loginBuyer = async (data) => {
   });
 };
 
-// ✅ LOGIN SELLER
+// LOGIN SELLER
 export const loginSeller = async (data) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {

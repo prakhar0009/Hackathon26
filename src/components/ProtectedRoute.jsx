@@ -1,14 +1,33 @@
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Import the hook instead
 
-const ProtectedRoute = ({ children, role }) => {
-  const { user } = useContext(AuthContext);
+const ProtectedRoute = ({ children, allowedRole }) => {
+  const { user, loading } = useAuth();
 
-  if (!user) return <Navigate to="/" />;
-  if (role && user.role !== role) return <Navigate to="/" />;
+  // Wait for the localStorage check to finish
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
 
-  // ✅ allowed
+  // If not logged in, send them to the home/login page
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
+  // If logged in but the role doesn't match, send them to their own dashboard
+  if (allowedRole && user.role !== allowedRole) {
+    return (
+      <Navigate
+        to={user.role === "buyer" ? "/buyer-dashboard" : "/seller-dashboard"}
+        replace
+      />
+    );
+  }
+
   return children;
 };
 
